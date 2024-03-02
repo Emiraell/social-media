@@ -2,16 +2,16 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import LoginUser from "./pages/LoginUser";
-import NavBar from "./components/NavBar";
+import Create from "./pages/Create";
 
 function App() {
   return (
     <div className=" m-auto text-center text-gray-100 font-roboto text-lg">
       <Router>
-        <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginUser />} />
+          <Route path="/create" element={<Create />} />
         </Routes>
       </Router>
     </div>

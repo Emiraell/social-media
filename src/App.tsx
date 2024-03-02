@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 
 function App() {
   return (
-    <div className=" m-auto w-full md:w-[70%] lg:w-[50%] text-gray-100 font-roboto">
+    <div className=" m-auto w-full md:w-[70%] lg:w-[50%] text-center text-gray-100 font-roboto">
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />

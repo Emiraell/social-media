@@ -2,7 +2,13 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        roboto: ["Roboto"],
+        roche: ["Rochester"],
+        lato: ["Lato"],
+      },
+    },
   },
   plugins: [],
 };

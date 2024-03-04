@@ -1,7 +1,7 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../configurations/firebase";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { addDoc, collection } from "firebase/firestore";
 
 export default function Create() {
+  const navigate = useNavigate();
   const [userInfos] = useAuthState(auth);
 
   const schema = yup.object().shape({
@@ -17,9 +18,18 @@ export default function Create() {
   const { register, handleSubmit } = useForm({ resolver: yupResolver(schema) });
 
   const postRef = collection(db, "posts");
+
+  // add documents to server
   const submitPost = async (data: { content: string }, e: any) => {
-    await addDoc(postRef, { userId: userInfos?.uid, ...data });
+    await addDoc(postRef, {
+      userId: userInfos?.uid,
+      userName: userInfos?.displayName,
+      userPhoto: userInfos?.photoURL,
+      date: new Date(),
+      ...data,
+    });
     e.target.reset();
+    navigate("/");
   };
 
   return (

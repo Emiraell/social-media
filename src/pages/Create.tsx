@@ -2,10 +2,11 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
-import { auth } from "../configurations/firebase";
+import { auth, db } from "../configurations/firebase";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function Create() {
   const [userInfos] = useAuthState(auth);
@@ -15,8 +16,10 @@ export default function Create() {
   });
   const { register, handleSubmit } = useForm({ resolver: yupResolver(schema) });
 
-  const submitPost = async (data: { content: string }) => {
-    console.log(data);
+  const postRef = collection(db, "posts");
+  const submitPost = async (data: { content: string }, e: any) => {
+    await addDoc(postRef, { userId: userInfos?.uid, ...data });
+    e.target.reset();
   };
 
   return (

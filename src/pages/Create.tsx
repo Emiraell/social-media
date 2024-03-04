@@ -18,6 +18,7 @@ export default function Create() {
   const submitPost = async (data: { content: string }) => {
     console.log(data);
   };
+
   return (
     <form onSubmit={handleSubmit(submitPost)} className="p-12">
       {/* create post Header */}

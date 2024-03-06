@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { addDoc, collection } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 export default function Create() {
   const navigate = useNavigate();
@@ -19,13 +20,52 @@ export default function Create() {
 
   const postRef = collection(db, "posts");
 
+  // get day
+
+  const [day, setDay] = useState<string>("");
+  const [month, setMonth] = useState<string>("");
+  const getDay = () => {
+    const date: number = new Date().getDay();
+    date === 0 && setDay("Sun");
+    date === 1 && setDay("Mon");
+    date === 2 && setDay("Tue");
+    date === 3 && setDay("Wed");
+    date === 4 && setDay("Thu");
+    date === 5 && setDay("Fri");
+    date === 6 && setDay("Sat");
+
+    const month: number = new Date().getMonth();
+    month === 0 && setMonth("Jan");
+    month === 1 && setMonth("Feb");
+    month === 2 && setMonth("Mar");
+    month === 3 && setMonth("Apr");
+    month === 4 && setMonth("May");
+    month === 5 && setMonth("Jun");
+    month === 6 && setMonth("Jul");
+    month === 7 && setMonth("Aug");
+    month === 8 && setMonth("Sep");
+    month === 9 && setMonth("Oct");
+    month === 10 && setMonth("Nov");
+    month === 11 && setMonth("Dec");
+  };
+
+  useEffect(() => {
+    getDay();
+  }, [day, month]);
   // add documents to server
   const submitPost = async (data: { content: string }, e: any) => {
+    const date: any = new Date();
     await addDoc(postRef, {
       userId: userInfos?.uid,
       userName: userInfos?.displayName,
       userPhoto: userInfos?.photoURL,
-      date: new Date(),
+      date: date,
+      datePosted: {
+        year: date.getFullYear(),
+        month: month,
+        date: date.getDate(),
+        day: day,
+      },
       ...data,
     });
     e.target.reset();

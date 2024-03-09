@@ -10,33 +10,17 @@ import {
   faThumbsUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAppDispatch, useAppSelector } from "../store/Store";
-import { getAllPost } from "../store/features/Posts";
-
-// interface postState {
-//   userId: string;
-//   userName: string;
-//   userPhoto: string;
-//   date: any;
-//   content: string;
-// }
+import { addLikes, getAllPost } from "../store/features/Posts";
 
 export default function Home() {
   const [userInfos] = useAuthState(auth);
-  // const postRef = collection(db, "posts");
-
-  // const [allPost, setAllPost] = useState<postState[]>();
-
-  // const getPost = async () => {
-  //   let data = await getDocs(postRef);
-  //   // data.docs.map((doc) => allPost.push(doc.data() as postState));
-  //   setAllPost(data.docs.map((doc) => ({ ...(doc.data() as postState) })));
-  // };
 
   const dispatch = useAppDispatch();
   const allPost = useAppSelector((state) => state.postsReducer.allPosts);
 
   useEffect(() => {
     dispatch(getAllPost());
+    console.log(allPost);
   }, []);
   return (
     <div className="">
@@ -55,8 +39,8 @@ export default function Home() {
                 <div className="px-3 text-start">
                   <p>{post.userName}</p>
                   <p className="text-gray-400">
-                    {post.datePosted.date} {post.datePosted.month},{" "}
-                    {post.datePosted.year}
+                    {post.datePosted?.date} {post.datePosted?.month},{" "}
+                    {post.datePosted?.year}
                   </p>
                 </div>
               </div>
@@ -67,7 +51,13 @@ export default function Home() {
               {post.content}
             </div>
             <div className="flex justify-evenly py-3 px-2 border-t border-blue-500">
-              <p>
+              <p
+                onClick={() =>
+                  dispatch(
+                    addLikes({ userId: userInfos?.uid, postId: post.postId })
+                  )
+                }
+              >
                 <FontAwesomeIcon icon={faThumbsUp} /> Likes
               </p>
               <p>

@@ -23,15 +23,52 @@ export const likeSlice = createSlice({
   name: "likes",
   initialState,
   reducers: {},
+  extraReducers(builder) {
+    builder
+      .addCase(addLikes.fulfilled, (state, action) => {
+        state.allLikes = [
+          ...state.allLikes,
+          { userId: action.payload.data.userId, postId: action.payload.dataId },
+        ];
+      })
+      .addCase(addLikes.rejected, (state) => {
+        state.allLikes = [...state.allLikes];
+      })
+      .addCase(deleteLike.fulfilled, (state, action) => {
+        state.allLikes = state.allLikes.filter(
+          (like) => like.postId !== action.payload
+        );
+      })
+      .addCase(deleteLike.rejected, (state) => {
+        state.allLikes = [...state.allLikes];
+      })
+      .addCase(getAllLikes.fulfilled, (state, action) => {
+        state.allLikes = action.payload.map((doc) => ({
+          userId: doc.data().userId,
+          postId: doc.id,
+        }));
+      })
+      .addCase(getAllLikes.rejected, (state) => {
+        state.allLikes = [...state.allLikes];
+      });
+  },
 });
 
 const likesRef = collection(db, "likes");
+export const addLikes = createAsyncThunk(
+  "post/likes",
+  async (data: likeState) => {
+    const dataa = await addDoc(likesRef, data);
+    return { data: data, dataId: dataa.id };
+  }
+);
+
 export const getAllLikes = createAsyncThunk(
   "get/likes",
   async (post: string) => {
     const likesDoc = query(likesRef, where("postId", "==", post));
     const data = await getDocs(likesDoc);
-    return data;
+    return data.docs;
   }
 );
 
@@ -48,13 +85,6 @@ export const deleteLike = createAsyncThunk(
     const deletDocs = doc(db, "likes", likeId);
     await deleteDoc(deletDocs);
     return likeId;
-  }
-);
-export const addLikes = createAsyncThunk(
-  "post/likes",
-  async (data: likeState) => {
-    const dataa = await addDoc(likesRef, data);
-    return dataa.id;
   }
 );
 export default likeSlice.reducer;

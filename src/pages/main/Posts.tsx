@@ -47,7 +47,7 @@ export default function posts({ post }: postState | any) {
         <p
           onClick={() => {
             const params = { postId: post.postId, userId: userInfos?.uid };
-            userLiked
+            !userLiked
               ? dispatch(
                   addLikes({ userId: userInfos?.uid, postId: post.postId })
                 )
@@ -55,7 +55,7 @@ export default function posts({ post }: postState | any) {
             // dispatch(getAllLikes(post.postId));
           }}
         >
-          {userLiked ? (
+          {!userLiked ? (
             <FontAwesomeIcon icon={faThumbsUp} />
           ) : (
             <FontAwesomeIcon icon={faThumbsDown} />

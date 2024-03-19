@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/main/Home";
 import LoginUser from "./pages/LoginUser";
 import Create from "./pages/Create";
+import Comments from "./pages/Comments";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginUser />} />
           <Route path="/create" element={<Create />} />
+          <Route path="/comments/:id" element={<Comments />} />
         </Routes>
       </Router>
     </div>

@@ -15,13 +15,9 @@ export interface likeState {
   postId: string | undefined;
 }
 
-export interface likes {
-  allLikes: likeState[];
-}
-const initialState: likes = { allLikes: [] };
 export const likeSlice = createSlice({
   name: "likes",
-  initialState,
+  initialState: {},
   reducers: {},
 });
 
@@ -31,16 +27,6 @@ export const addLikes = createAsyncThunk(
   async (data: likeState) => {
     const dataa = await addDoc(likesRef, data);
     return { data: data, dataId: dataa.id };
-  }
-);
-
-export const getAllLikes = createAsyncThunk(
-  "get/likes",
-  async (post: string) => {
-    const likesReff = collection(db, "likes");
-    const likesDoc = query(likesReff, where("postId", "==", post));
-    const data = await getDocs(likesDoc);
-    return data.docs;
   }
 );
 

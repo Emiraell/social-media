@@ -1,10 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  addLikes,
-  deleteLike,
-  // getAllLikes,
-  likeState,
-} from "../../store/features/Likes";
+import { addLikes, deleteLike, likeState } from "../../store/features/Likes";
 import { postState } from "../../store/features/Posts";
 import {
   faComment,
@@ -12,19 +7,17 @@ import {
   faThumbsDown,
   faThumbsUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { useAppDispatch, useAppSelector } from "../../store/Store";
+import { useAppDispatch } from "../../store/Store";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../configurations/firebase";
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 export default function posts({ post }: postState | any) {
   const [userInfos] = useAuthState(auth);
   const dispatch = useAppDispatch();
   const likesCollections = collection(db, "likes");
-  // const likes: likeState[] | null = useAppSelector(
-  //   (state) => state.likesReducer.allLikes
-  // );
   const [allLikes, setAllLikes] = useState<likeState[] | null>(null);
   const getAllLikes = async () => {
     const likesDoc = query(
@@ -32,13 +25,17 @@ export default function posts({ post }: postState | any) {
       where("postId", "==", post.postId)
     );
     const data = await getDocs(likesDoc);
-    setAllLikes(
-      data.docs.map((doc) => ({ userId: doc.data().userId, postId: doc.id }))
-    );
+    try {
+      setAllLikes(
+        data.docs.map((doc) => ({ userId: doc.data().userId, postId: doc.id }))
+      );
+    } catch {
+      setAllLikes(allLikes);
+      alert("Error in fetching likes, please refresh and try again");
+    }
   };
 
   useEffect(() => {
-    // dispatch(getAllLikes(post.postId));
     getAllLikes();
   }, [allLikes]);
 
@@ -72,7 +69,6 @@ export default function posts({ post }: postState | any) {
                   addLikes({ userId: userInfos?.uid, postId: post.postId })
                 )
               : dispatch(deleteLike(params));
-            // dispatch(getAllLikes(post.postId));
           }}
         >
           {!userLiked ? (
@@ -83,7 +79,9 @@ export default function posts({ post }: postState | any) {
           Likes {allLikes?.length}
         </p>
         <p>
-          <FontAwesomeIcon icon={faComment} /> comments
+          <Link to={`/comments/${post.postId}`}>
+            <FontAwesomeIcon icon={faComment} /> comments
+          </Link>
         </p>
       </div>
     </div>

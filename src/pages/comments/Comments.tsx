@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../store/Store";
-import { postState } from "../store/features/Posts";
+import { useAppDispatch, useAppSelector } from "../../store/Store";
+import { postState } from "../../store/features/Posts";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,9 +8,16 @@ import {
   faClock,
   faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
-import { date } from "yup";
+import { addComments, comment } from "../../store/features/comments";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "../../configurations/firebase";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function Comments() {
+  const [userInfos] = useAuthState(auth);
   const { id } = useParams();
   const allPosts = useAppSelector((state) => state.postsReducer.allPosts);
   const [post, setPost] = useState<postState>();
@@ -18,6 +25,25 @@ export default function Comments() {
   const [hour, setHour] = useState<number | null>();
   const [minute, setMinute] = useState<string | null>();
 
+  // form
+  const schema = yup.object().shape({
+    comment: yup.string().max(100).required(),
+  });
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const addComment = async (data: { comment: string }, e: any) => {
+    const commentsRef = collection(db, "comments");
+    await addDoc(commentsRef, {
+      ...data,
+      user: userInfos?.uid as string,
+      postId: post?.postId as string,
+    });
+    e.target.reset();
+  };
   useEffect(() => {
     allPosts.map((post) => post.postId === id && setPost(post));
     if (post) {
@@ -61,14 +87,23 @@ export default function Comments() {
         </p>
       </div>
       <p className="mt-10 text-2xl tracking-wider font-mono">comments</p>
-      <div className=" fixed bottom-10 left-0 right-0 flex items-center justify-center">
+      <form
+        onSubmit={handleSubmit(addComment)}
+        className=" fixed bottom-10 left-0 right-0 flex items-center justify-center"
+      >
         <textarea
+          {...register("comment")}
           className=" bg-transparent outline-none px-10 py-3 overflow-x-visible h-16"
           placeholder="write a comment"
           id="comment"
-        />
-        <FontAwesomeIcon icon={faPaperPlane} className="h-8 text-emerald-500" />
-      </div>
+        />{" "}
+        <button type="submit">
+          <FontAwesomeIcon
+            icon={faPaperPlane}
+            className="h-8 text-emerald-500"
+          />
+        </button>
+      </form>
     </div>
   );
 }

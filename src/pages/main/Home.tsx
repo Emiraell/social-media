@@ -4,8 +4,11 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/Store";
 import { getAllPost } from "../../store/features/Posts";
 import Posts from "./Posts";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../configurations/firebase";
 
 export default function Home() {
+  const [user] = useAuthState(auth);
   const dispatch = useAppDispatch();
   const allPost = useAppSelector((state) => state.postsReducer.allPosts);
 
@@ -16,10 +19,12 @@ export default function Home() {
     <div className="">
       <NavBar />
       <div className="pt-36 md:w-[50%] m-auto">
-        {/* post */}
-        {allPost?.map((post) => (
-          <Posts post={post} key={post.content} />
-        ))}
+        {/* posts*/}
+        {user ? (
+          allPost?.map((post) => <Posts post={post} key={post.content} />)
+        ) : (
+          <p>Login to have full access</p>
+        )}
       </div>
     </div>
   );

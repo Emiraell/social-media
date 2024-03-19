@@ -1,5 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { addLikes, deleteLike, getAllLikes } from "../../store/features/Likes";
+import {
+  addLikes,
+  deleteLike,
+  // getAllLikes,
+  likeState,
+} from "../../store/features/Likes";
 import { postState } from "../../store/features/Posts";
 import {
   faComment,
@@ -9,20 +14,35 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useAppDispatch, useAppSelector } from "../../store/Store";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../configurations/firebase";
-import { useEffect } from "react";
-// import { useEffect } from "react";
+import { auth, db } from "../../configurations/firebase";
+import { useEffect, useState } from "react";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 export default function posts({ post }: postState | any) {
   const [userInfos] = useAuthState(auth);
   const dispatch = useAppDispatch();
-  const likes = useAppSelector((state) => state.likesReducer.allLikes);
+  const likesCollections = collection(db, "likes");
+  // const likes: likeState[] | null = useAppSelector(
+  //   (state) => state.likesReducer.allLikes
+  // );
+  const [allLikes, setAllLikes] = useState<likeState[] | null>(null);
+  const getAllLikes = async () => {
+    const likesDoc = query(
+      likesCollections,
+      where("postId", "==", post.postId)
+    );
+    const data = await getDocs(likesDoc);
+    setAllLikes(
+      data.docs.map((doc) => ({ userId: doc.data().userId, postId: doc.id }))
+    );
+  };
 
   useEffect(() => {
-    dispatch(getAllLikes(post.postId));
-  }, []);
+    // dispatch(getAllLikes(post.postId));
+    getAllLikes();
+  }, [allLikes]);
 
-  const userLiked = likes.find((like) => like.userId === userInfos?.uid);
+  const userLiked = allLikes?.find((like) => like.userId === userInfos?.uid);
   return (
     <div className=" mb-4  bg-blue-950">
       <div className="flex justify-between p-4 ">
@@ -60,7 +80,7 @@ export default function posts({ post }: postState | any) {
           ) : (
             <FontAwesomeIcon icon={faThumbsDown} />
           )}
-          Likes {likes.length}
+          Likes {allLikes?.length}
         </p>
         <p>
           <FontAwesomeIcon icon={faComment} /> comments

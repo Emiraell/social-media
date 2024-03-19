@@ -36,7 +36,6 @@ export const postSlice = createSlice({
           ({
             ...doc.data(),
             postId: doc.id,
-            userLiked: false,
           } as postState)
       );
     });

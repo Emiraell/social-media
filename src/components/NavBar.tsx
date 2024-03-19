@@ -22,7 +22,7 @@ export default function NavBar() {
             onClick={() => navigate("/")}
           />
           <div className="flex items-center md:text-xl text-lg">
-            <Link to="/" className="hidden md:block">
+            <Link to="/" className="hidden md:block mx-5">
               Home
             </Link>
 

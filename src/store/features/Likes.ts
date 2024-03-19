@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../configurations/firebase";
 
-interface likeState {
+export interface likeState {
   userId: string | undefined;
   postId: string | undefined;
 }
@@ -23,35 +23,6 @@ export const likeSlice = createSlice({
   name: "likes",
   initialState,
   reducers: {},
-  extraReducers(builder) {
-    builder
-      .addCase(addLikes.fulfilled, (state, action) => {
-        state.allLikes = [
-          ...state.allLikes,
-          { userId: action.payload.data.userId, postId: action.payload.dataId },
-        ];
-      })
-      .addCase(addLikes.rejected, (state) => {
-        state.allLikes = [...state.allLikes];
-      })
-      .addCase(deleteLike.fulfilled, (state, action) => {
-        state.allLikes = state.allLikes.filter(
-          (like) => like.postId !== action.payload
-        );
-      })
-      .addCase(deleteLike.rejected, (state) => {
-        state.allLikes = [...state.allLikes];
-      })
-      .addCase(getAllLikes.fulfilled, (state, action) => {
-        state.allLikes = action.payload.map((doc) => ({
-          userId: doc.data().userId,
-          postId: doc.id,
-        }));
-      })
-      .addCase(getAllLikes.rejected, (state) => {
-        state.allLikes = [...state.allLikes];
-      });
-  },
 });
 
 const likesRef = collection(db, "likes");
@@ -66,7 +37,8 @@ export const addLikes = createAsyncThunk(
 export const getAllLikes = createAsyncThunk(
   "get/likes",
   async (post: string) => {
-    const likesDoc = query(likesRef, where("postId", "==", post));
+    const likesReff = collection(db, "likes");
+    const likesDoc = query(likesReff, where("postId", "==", post));
     const data = await getDocs(likesDoc);
     return data.docs;
   }

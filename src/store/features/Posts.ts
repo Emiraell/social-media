@@ -2,18 +2,22 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../configurations/firebase";
 
+interface time {
+  hour: number;
+  minute: number;
+}
 interface dateState {
   year: number;
   month: number;
   date: number;
   day: string;
+  time: time;
 }
 
 export interface postState {
   userId: string;
   userName: string;
   userPhoto: string;
-  date: any;
   datePosted: dateState;
   content: string;
   postId: string;

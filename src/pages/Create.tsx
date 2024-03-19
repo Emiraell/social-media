@@ -59,12 +59,15 @@ export default function Create() {
       userId: userInfos?.uid,
       userName: userInfos?.displayName,
       userPhoto: userInfos?.photoURL,
-      // date: date,
       datePosted: {
         year: date.getFullYear(),
         month: month,
         date: date.getDate(),
         day: day,
+        time: {
+          hour: date.getHours(),
+          minute: date.getMinutes(),
+        },
       },
       ...data,
     });

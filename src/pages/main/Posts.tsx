@@ -71,12 +71,11 @@ export default function posts({ post }: postState | any) {
               : dispatch(deleteLike(params));
           }}
         >
-          {!userLiked ? (
-            <FontAwesomeIcon icon={faThumbsUp} />
-          ) : (
-            <FontAwesomeIcon icon={faThumbsDown} />
-          )}
-          Likes {allLikes?.length}
+          <FontAwesomeIcon
+            icon={faThumbsUp}
+            className={`${userLiked && "text-blue-500"} px-2 text-2xl`}
+          />
+          {allLikes && <span className="text-xl">{allLikes?.length}</span>}
         </p>
         <p>
           <Link to={`/comments/${post.postId}`}>

@@ -7,7 +7,7 @@ import * as yup from "yup";
 import { auth, db } from "../../configurations/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export default function AddComment({ post }) {
+export default function AddComment({ post, setCommentss }) {
   const [userInfos] = useAuthState(auth);
 
   // form
@@ -22,13 +22,37 @@ export default function AddComment({ post }) {
 
   const addComment = async (data: { comment: string }, e: any) => {
     const commentsRef = collection(db, "comments");
-    await addDoc(commentsRef, {
+    const newDoc = await addDoc(commentsRef, {
       ...data,
       userPhoto: userInfos?.photoURL as string,
       userName: userInfos?.displayName as string,
       user: userInfos?.uid as string,
       postId: post?.postId as string,
     });
+    setCommentss((prev) =>
+      prev
+        ? [
+            ...prev,
+            {
+              ...data,
+              userPhoto: userInfos?.photoURL as string,
+              userName: userInfos?.displayName as string,
+              user: userInfos?.uid as string,
+              postId: post?.postId as string,
+              commentId: newDoc.id,
+            },
+          ]
+        : [
+            {
+              ...data,
+              userPhoto: userInfos?.photoURL as string,
+              userName: userInfos?.displayName as string,
+              user: userInfos?.uid as string,
+              postId: post?.postId as string,
+              commentId: newDoc.id,
+            },
+          ]
+    );
     e.target.reset();
   };
 
@@ -40,14 +64,14 @@ export default function AddComment({ post }) {
       >
         <textarea
           {...register("comment")}
-          className=" bg-transparent outline-none px-10 py-3 overflow-x-visible h-16"
+          className=" bg-transparent outline-none px-14 py-3 overflow-x-hidden h-16"
           placeholder="write a comment"
           id="comment"
         />{" "}
         <button type="submit">
           <FontAwesomeIcon
             icon={faPaperPlane}
-            className="h-8 text-emerald-500"
+            className="h-8 text-emerald-500 ml-8"
           />
         </button>
       </form>

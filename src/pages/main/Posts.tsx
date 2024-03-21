@@ -9,86 +9,99 @@ import {
 import { useAppDispatch } from "../../store/Store";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../configurations/firebase";
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { Link } from "react-router-dom";
 
-export const LikesContext = createContext<any>(null);
-export default function posts({ post }: postState | any) {
+interface Ipost {
+  post: postState;
+}
+
+export default function posts({ post }: Ipost) {
+  // user info
   const [userInfos] = useAuthState(auth);
+  // dispatch
   const dispatch = useAppDispatch();
-  const likesCollections = collection(db, "likes");
-  const [allLikes, setAllLikes] = useState<likeState[] | null>(null);
-  const getAllLikes = async () => {
-    const likesDoc = query(
-      likesCollections,
-      where("postId", "==", post.postId)
-    );
+  const [postLikes, setPostLikes] = useState<likeState[] | null>(null);
+  const [openEllipsis, setOpenEllipsis] = useState<boolean>(false);
+
+  // get all likes functionality
+  const likesRef = collection(db, "likes");
+  const getPostLikes = async () => {
+    const likesDoc = query(likesRef, where("postId", "==", post.postId));
     const data = await getDocs(likesDoc);
     try {
-      setAllLikes(
+      setPostLikes(
         data.docs.map((doc) => ({ userId: doc.data().userId, postId: doc.id }))
       );
     } catch {
-      setAllLikes(allLikes);
+      setPostLikes(postLikes);
       alert("Error in fetching likes, please refresh and try again");
     }
   };
 
-  useEffect(() => {
-    getAllLikes();
-  }, [allLikes]);
+  useEffect((): (() => void) => {
+    getPostLikes();
+    return () => {};
+  }, [postLikes]);
 
-  const userLiked = allLikes?.find((like) => like.userId === userInfos?.uid);
+  // check if current user logged in has liked the post
+  const userLiked = postLikes?.find((like) => like.userId === userInfos?.uid);
+
   return (
-    <LikesContext.Provider value={{ allLikes, setAllLikes }}>
-      <div className=" mb-4  bg-blue-950">
-        <div className="flex justify-between p-4 ">
-          <div className="flex">
-            <img
-              src={`${post.userPhoto}`}
-              alt=""
-              className="rounded-full h-12"
-            />
+    <div className=" mb-4  bg-blue-950">
+      <div className="flex justify-between p-4 ">
+        <div className="flex">
+          <img src={`${post.userPhoto}`} alt="" className="rounded-full h-12" />
 
-            <div className="px-3 text-start">
-              <p>{post.userName}</p>
-              <p className="text-gray-400">
-                {post.datePosted?.date} {post.datePosted?.month},{" "}
-                {post.datePosted?.year}
-              </p>
-            </div>
+          <div className="px-3 text-start">
+            <p>{post.userName}</p>
+            <p className="text-gray-400">
+              {post.datePosted?.date} {post.datePosted?.month},{" "}
+              {post.datePosted?.year}
+            </p>
           </div>
-          <FontAwesomeIcon icon={faEllipsis} className="text-xl" />
         </div>
-
-        <div className="text-start px-4 py-5 pl-6 text-lg md:text-xl">
-          {post.content}
-        </div>
-        <div className="flex justify-evenly py-3 px-2 border-t border-blue-500">
-          <p
-            onClick={() => {
-              const params = { postId: post.postId, userId: userInfos?.uid };
-              !userLiked
-                ? dispatch(
-                    addLikes({ userId: userInfos?.uid, postId: post.postId })
-                  )
-                : dispatch(deleteLike(params));
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faThumbsUp}
-              className={`${userLiked && "text-blue-500"} px-2 text-2xl`}
-            />
-            {allLikes && <span className="text-xl">{allLikes?.length}</span>}
-          </p>
-          <p>
-            <Link to={`/comments/${post.postId}`}>
-              <FontAwesomeIcon icon={faComment} /> comments
-            </Link>
-          </p>
+        <div className=" relative">
+          <FontAwesomeIcon
+            icon={faEllipsis}
+            className="text-xl"
+            onClick={() => setOpenEllipsis(!openEllipsis)}
+          />
+          {openEllipsis && <p className="">Delete</p>}
         </div>
       </div>
-    </LikesContext.Provider>
+
+      <div className="text-start px-4 py-5 pl-6 text-lg md:text-xl">
+        {post.content}
+      </div>
+      <div className="flex justify-evenly py-3 px-2 border-t border-blue-500">
+        <p
+          onClick={() => {
+            const deleteLikeParams: likeState = {
+              postId: post.postId,
+              userId: userInfos?.uid,
+            };
+            // dispatch either the addlike or deletelike depending if the user has liked or not
+            !userLiked
+              ? dispatch(
+                  addLikes({ userId: userInfos?.uid, postId: post.postId })
+                )
+              : dispatch(deleteLike(deleteLikeParams));
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faThumbsUp}
+            className={`${userLiked && "text-blue-500"} px-2 text-2xl`}
+          />
+          {postLikes && <span className="text-xl">{postLikes?.length}</span>}
+        </p>
+        <p>
+          <Link to={`/comments/${post.postId}`}>
+            <FontAwesomeIcon icon={faComment} /> comments
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 }

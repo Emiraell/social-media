@@ -6,13 +6,19 @@ import { signOut } from "firebase/auth";
 
 export default function NavBar() {
   const navigate = useNavigate();
+
+  // get info of the user signed in
   const [userInfos] = useAuthState(auth);
+
+  // signOut
   const signUserOut = async () => {
     await signOut(auth);
     navigate("/login");
   };
+
   return (
-    <div className="">
+    <div>
+      {/* navBar */}
       <nav className="fixed w-full p-3 md:p-5 bg-blue-950 z-10">
         <div className="flex justify-between overflow-hidden items-center mx-5">
           <img
@@ -26,6 +32,7 @@ export default function NavBar() {
               Home
             </Link>
 
+            {/* Navbar content depening on if user is logged in or not */}
             {!userInfos ? (
               <Link to="/login">Login</Link>
             ) : (

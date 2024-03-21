@@ -21,28 +21,33 @@ export interface postState {
   datePosted: dateState;
   content: string;
   postId: string;
-  userLiked: boolean;
 }
 
 interface allPost {
   allPosts: postState[];
 }
 const initialState: allPost = { allPosts: [] };
+
+// post collection in firestore database
 const postRef = collection(db, "posts");
 export const postSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getAllPost.fulfilled, (state, action) => {
-      state.allPosts = action.payload.docs.map(
-        (doc) =>
-          ({
-            ...doc.data(),
-            postId: doc.id,
-          } as postState)
-      );
-    });
+    builder
+      .addCase(getAllPost.fulfilled, (state, action) => {
+        state.allPosts = action.payload.docs.map(
+          (doc) =>
+            ({
+              ...doc.data(),
+              postId: doc.id,
+            } as postState)
+        );
+      })
+      .addCase(getAllPost.rejected, (state) => {
+        state.allPosts = [...state.allPosts];
+      });
   },
 });
 

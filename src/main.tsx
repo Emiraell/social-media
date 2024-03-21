@@ -7,6 +7,7 @@ import { store } from "./store/Store.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    {/* redux provider */}
     <Provider store={store}>
       <App />
     </Provider>

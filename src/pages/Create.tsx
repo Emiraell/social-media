@@ -11,17 +11,20 @@ import { useEffect, useState } from "react";
 
 export default function Create() {
   const navigate = useNavigate();
+
+  // get user infos if user is loggedIn
   const [userInfos] = useAuthState(auth);
 
+  // set form/data shape
   const schema = yup.object().shape({
     content: yup.string().max(800).min(1).required(),
   });
   const { register, handleSubmit } = useForm({ resolver: yupResolver(schema) });
 
+  // post collection in our firestore database
   const postRef = collection(db, "posts");
 
-  // get day
-
+  // get date of making post
   const [day, setDay] = useState<string>("");
   const [month, setMonth] = useState<string>("");
   const getDay = () => {
@@ -49,24 +52,21 @@ export default function Create() {
     month === 11 && setMonth("Dec");
   };
 
-  useEffect(() => {
-    getDay();
-  }, [day, month]);
-  // add documents to server
+  // add documents to firestore database
   const submitPost = async (data: { content: string }, e: any) => {
-    const date: any = new Date();
+    const date: Date = new Date();
     await addDoc(postRef, {
-      userId: userInfos?.uid,
-      userName: userInfos?.displayName,
-      userPhoto: userInfos?.photoURL,
+      userId: userInfos?.uid as string,
+      userName: userInfos?.displayName as string,
+      userPhoto: userInfos?.photoURL as string,
       datePosted: {
-        year: date.getFullYear(),
-        month: month,
-        date: date.getDate(),
-        day: day,
+        year: date.getFullYear() as number,
+        month: month as string,
+        date: date.getDate() as number,
+        day: day as string,
         time: {
-          hour: date.getHours(),
-          minute: date.getMinutes(),
+          hour: date.getHours() as number,
+          minute: date.getMinutes() as number,
         },
       },
       ...data,
@@ -74,6 +74,10 @@ export default function Create() {
     e.target.reset();
     navigate("/");
   };
+
+  useEffect(() => {
+    getDay();
+  }, [day, month]);
 
   return (
     <form onSubmit={handleSubmit(submitPost)} className="p-12">
@@ -88,7 +92,7 @@ export default function Create() {
         </button>
       </div>
 
-      {/* user  infos*/}
+      {/* user infos*/}
       <div className="flex items-center my-10 m-auto md:w-[50%]">
         <img
           src={`${userInfos?.photoURL}`}
@@ -101,7 +105,7 @@ export default function Create() {
         </div>
       </div>
 
-      {/* post input */}
+      {/* post input area*/}
       <textarea
         {...register("content")}
         className="h-60 w-full bg-transparent outline-none p-3"

@@ -1,4 +1,3 @@
-// import { collection, getDocs } from "firebase/firestore";
 import NavBar from "../../components/NavBar";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/Store";
@@ -8,7 +7,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../configurations/firebase";
 
 export default function Home() {
+  // user information
   const [user] = useAuthState(auth);
+
+  // dispatch our actions and get posts from redux store
   const dispatch = useAppDispatch();
   const allPost = useAppSelector((state) => state.postsReducer.allPosts);
 

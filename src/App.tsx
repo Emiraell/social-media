@@ -7,7 +7,7 @@ import Comments from "./pages/comments/Comments";
 
 function App() {
   return (
-    <div className=" m-auto text-center text-gray-100 font-roboto text-lg">
+    <div className="  m-auto text-center text-gray-100 font-roboto text-lg">
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />

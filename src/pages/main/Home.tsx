@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <div className="">
       <NavBar />
-      <div className="pt-36 md:w-[50%] m-auto">
+      <div className="pt-36 md:w-[85%] lg:w-[60%] m-auto">
         {/* posts*/}
         {user ? (
           allPost?.map((post) => <Posts post={post} key={post.content} />)

@@ -12,7 +12,21 @@ import { auth, db } from "../../configurations/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect } from "react";
 
-export default function EachComment({ com, setCommentss }) {
+export interface comment {
+  user: string;
+  userName: string;
+  userPhoto: string;
+  comment: string;
+  postId: string;
+  commentId: string;
+}
+
+interface IProps {
+  com: comment;
+  setComments: any;
+}
+
+export default function EachComment({ com, setComments }: IProps) {
   const [userInfos] = useAuthState(auth);
   const commentRef = collection(db, "comments");
   const deleteComment = async () => {
@@ -28,8 +42,8 @@ export default function EachComment({ com, setCommentss }) {
     console.log(commentId);
     const commentToDelete = doc(db, "comments", commentId);
     await deleteDoc(commentToDelete);
-    setCommentss(
-      (prev) =>
+    setComments(
+      (prev: comment[]) =>
         prev && prev.filter((comment) => comment.commentId !== commentId)
     );
   };
@@ -53,7 +67,7 @@ export default function EachComment({ com, setCommentss }) {
           </div>
           <FontAwesomeIcon
             icon={faTrash}
-            className=""
+            className=" text-red-500"
             onClick={deleteComment}
           />
         </div>

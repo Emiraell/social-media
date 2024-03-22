@@ -5,6 +5,8 @@ import { auth, provider } from "../configurations/firebase";
 
 export default function LoginUser() {
   const navigate = useNavigate();
+
+  // sign in user with google provider
   const signUserIn = async () => {
     await signInWithPopup(auth, provider);
     navigate("/");

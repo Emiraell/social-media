@@ -68,7 +68,7 @@ export default function posts({ post }: Ipost) {
             className="text-xl"
             onClick={() => setOpenEllipsis(!openEllipsis)}
           />
-          {openEllipsis && <p className="">Delete</p>}
+          {openEllipsis && <p className=" absolute -left-8 ">Delete</p>}
         </div>
       </div>
 

@@ -22,6 +22,7 @@ export const likeSlice = createSlice({
 });
 
 const likesRef = collection(db, "likes");
+// add like
 export const addLikes = createAsyncThunk(
   "post/likes",
   async (data: likeState) => {
@@ -30,16 +31,18 @@ export const addLikes = createAsyncThunk(
   }
 );
 
+// delete like
 export const deleteLike = createAsyncThunk(
-  "remove/like",
-  async ({ postId, userId }: any) => {
-    const deleteDocToquery = query(
+  "delete/like",
+  async ({ postId, userId }: likeState) => {
+    const deleteDocQuery = query(
       likesRef,
       where("postId", "==", postId),
       where("userId", "==", userId)
     );
-    const likeToDelData = await getDocs(deleteDocToquery);
+    const likeToDelData = await getDocs(deleteDocQuery);
     const likeId = likeToDelData.docs[0].id;
+    // single doc to delete
     const deletDocs = doc(db, "likes", likeId);
     await deleteDoc(deletDocs);
     return likeId;

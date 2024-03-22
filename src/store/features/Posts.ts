@@ -28,8 +28,6 @@ interface allPost {
 }
 const initialState: allPost = { allPosts: [] };
 
-// post collection in firestore database
-const postRef = collection(db, "posts");
 export const postSlice = createSlice({
   name: "posts",
   initialState,
@@ -51,9 +49,14 @@ export const postSlice = createSlice({
   },
 });
 
+// post collection in firestore database
+const postRef = collection(db, "posts");
+
+// get all post from firestore
 export const getAllPost = createAsyncThunk("get/post", async () => {
   const data = await getDocs(postRef);
   return data;
 });
 
+export const deletePost = createAsyncThunk("delete/post", async () => {});
 export default postSlice.reducer;

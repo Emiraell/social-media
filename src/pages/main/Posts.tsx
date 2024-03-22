@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { addLikes, deleteLike, likeState } from "../../store/features/Likes";
-import { postState } from "../../store/features/Posts";
+import { deletePost, deleteProps, postState } from "../../store/features/Posts";
 import {
   faComment,
   faEllipsis,
@@ -68,13 +68,33 @@ export default function posts({ post }: Ipost) {
             className="text-xl"
             onClick={() => setOpenEllipsis(!openEllipsis)}
           />
-          {openEllipsis && <p className=" absolute -left-8 ">Delete</p>}
+          {openEllipsis && (
+            <p
+              className=" absolute -left-8 "
+              onClick={() => {
+                const deleteParams: deleteProps = {
+                  postId: post.postId,
+                  datePosted: post.datePosted,
+                  userId: userInfos?.uid,
+                  content: post.content,
+                };
+                dispatch(deletePost(deleteParams));
+              }}
+            >
+              Delete
+            </p>
+          )}
         </div>
       </div>
-
-      <div className="text-start px-4 py-5 pl-6 text-lg md:text-xl">
+      <div className="text-start px-4 py-5 pl-6 text-lg md:text-2xl tracking-wider">
         {post.content}
       </div>
+      {postLikes && postLikes.length > 0 && (
+        <p className="text-start px-10 text-2xl py-2">
+          <FontAwesomeIcon icon={faThumbsUp} className="px-2" />
+          {postLikes.length}
+        </p>
+      )}
       <div className="flex justify-evenly py-3 px-2 border-t border-blue-500">
         <p
           onClick={() => {
@@ -90,11 +110,13 @@ export default function posts({ post }: Ipost) {
               : dispatch(deleteLike(deleteLikeParams));
           }}
         >
-          <FontAwesomeIcon
-            icon={faThumbsUp}
-            className={`${userLiked && "text-blue-500"} px-2 text-2xl`}
-          />
-          {postLikes && <span className="text-xl">{postLikes?.length}</span>}
+          <p
+            className={`${
+              userLiked && "text-blue-500"
+            } text-2xl tracking-widest`}
+          >
+            <FontAwesomeIcon icon={faThumbsUp} className={` px-2 `} /> like
+          </p>
         </p>
         <p>
           <Link to={`/comments/${post.postId}`}>

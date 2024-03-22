@@ -47,27 +47,25 @@ export default function Comments() {
   };
 
   useEffect(() => {
-    post && getcomment();
+    getcomment();
   }, []);
 
   return (
-    <div className=" m-auto md:w-[70%] lg:w-[60%] md:bg-blue-950 md:mt-16 mt-8">
+    <div className=" m-auto md:w-[70%] lg:w-[60%] md:bg-blue-950 md: h-[100vh] md:mt-16 mt-8">
       <>
-        <div className="fixed flex w-full p-5 items-center">
+        <div className="fixed flex w-full  p-5 items-center">
           <Link to="/">
-            <FontAwesomeIcon icon={faArrowLeft} className="text-3xl mr-6" />
+            <FontAwesomeIcon icon={faArrowLeft} className="h-10 mr-6" />
           </Link>
-          <span className="font-bold m-auto text-2xl md:text-3xl">Post</span>
+          <p className="font-bold m-auto text-2xl md:pr-20 md:text-3xl">Post</p>
         </div>
         <div className="pt-24 mx-5 flex">
           <img src={post?.userPhoto} alt="" className="h-14 rounded-full" />
 
-          <div className="text-start text-lg px-4">
-            <p className="font-bold tracking-wider text-emerald-500">
-              {post?.userName}
-            </p>
+          <div className="text-start text-lg md:text-xl px-4 md:tracking-widest tracking-wide">
+            <p className="font-bold  text-emerald-500">{post?.userName}</p>
             {/* post */}
-            <p className=" leading-6 tracking-wide py-2 ">{post?.content}</p>
+            <p className=" leading-6 py-2 md:text-2xl">{post?.content}</p>
           </div>
         </div>
         {/* post date and time */}

@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../configurations/firebase";
 
 interface time {
@@ -58,5 +65,29 @@ export const getAllPost = createAsyncThunk("get/post", async () => {
   return data;
 });
 
-export const deletePost = createAsyncThunk("delete/post", async () => {});
+export interface deleteProps {
+  postId: string;
+  content: string;
+  datePosted: dateState;
+  userId: string | undefined;
+}
+export const deletePost = createAsyncThunk(
+  "delete/post",
+  async ({ postId, content, datePosted, userId }: deleteProps) => {
+    const postToQuery = query(
+      postRef,
+      where("userId", "==", postId),
+      where("content", "==", content),
+      where("datePosted", "==", datePosted),
+      where("userId", "==", userId)
+    );
+
+    const queriedPost = await getDocs(postToQuery);
+    const docId = queriedPost.docs[0].id;
+    const postToDelete = await doc(db, "posts", docId);
+    await deleteDoc(postToDelete);
+
+    return docId;
+  }
+);
 export default postSlice.reducer;

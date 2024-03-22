@@ -7,15 +7,8 @@ import * as yup from "yup";
 import { auth, db } from "../../configurations/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { postState } from "../../store/features/Posts";
+import { comment } from "./Comments";
 
-export interface comment {
-  user: string;
-  userName: string;
-  userPhoto: string;
-  comment: string;
-  postId: string;
-  commentId: string;
-}
 interface IProps {
   post: postState | null;
   setComments: any;
@@ -24,7 +17,7 @@ interface IProps {
 export default function AddComment({ post, setComments }: IProps) {
   const [userInfos] = useAuthState(auth);
 
-  // form
+  // form settings
   const schema = yup.object().shape({
     comment: yup.string().max(100).required(),
   });
@@ -34,6 +27,7 @@ export default function AddComment({ post, setComments }: IProps) {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
+  // add comment to firestore database
   const addComment = async (data: { comment: string }, e: any) => {
     try {
       const commentsRef = collection(db, "comments");
@@ -44,6 +38,8 @@ export default function AddComment({ post, setComments }: IProps) {
         user: userInfos?.uid as string,
         postId: post?.postId as string,
       });
+
+      // set comment adding to firestore database
       setComments((prev: comment[]) =>
         prev
           ? [

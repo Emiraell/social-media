@@ -10,16 +10,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../../configurations/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect } from "react";
-
-export interface comment {
-  user: string;
-  userName: string;
-  userPhoto: string;
-  comment: string;
-  postId: string;
-  commentId: string;
-}
+import { comment } from "./Comments";
 
 interface IProps {
   com: comment;
@@ -27,7 +18,10 @@ interface IProps {
 }
 
 export default function EachComment({ com, setComments }: IProps) {
+  // user infor
   const [userInfos] = useAuthState(auth);
+
+  // delete comment from firestore database and from our comment state
   const commentRef = collection(db, "comments");
   const deleteComment = async () => {
     const deleteQuery = query(
@@ -48,10 +42,8 @@ export default function EachComment({ com, setComments }: IProps) {
     );
   };
 
-  useEffect(() => {}, []);
-
   return (
-    <div key={com.postId} className="mx-7 my-5">
+    <div className="mx-7 my-5">
       {
         <div className=" flex text-xl justify-between">
           <div className="flex">

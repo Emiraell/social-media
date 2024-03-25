@@ -66,20 +66,13 @@ export const getAllPost = createAsyncThunk("get/post", async () => {
   return data;
 });
 
+// delete post from our firestore db and from our state
 export interface deleteProps {
   postId: string;
 }
 export const deletePost = createAsyncThunk(
   "delete/post",
   async ({ postId }: deleteProps) => {
-    // const postToQuery = query(
-    //   postRef,
-    //   where("userId", "==", postId),
-    //   where("userId", "==", userId)
-    // );
-
-    // const queriedPost = await getDocs(postToQuery);
-    // const docId = queriedPost.docs[0].id;
     const postToDelete = await doc(db, "posts", postId);
     await deleteDoc(postToDelete);
     console.log(postId);

@@ -53,7 +53,7 @@ export default function Comments() {
     <div className=" m-auto md:w-[70%] lg:w-[60%] md:bg-blue-950 md: h-[100vh] md:mt-16 mt-8">
       <>
         <div className="fixed flex w-full  p-5 items-center">
-          <Link to="/">
+          <Link to="/social-media">
             <FontAwesomeIcon icon={faArrowLeft} className="h-10 mr-6" />
           </Link>
           <p className="font-bold m-auto text-2xl md:pr-20 md:text-3xl">Post</p>

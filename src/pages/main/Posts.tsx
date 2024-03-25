@@ -120,7 +120,7 @@ export default function posts({ post }: Ipost) {
           </span>
         </p>
         <p>
-          <Link to={`/comments/${post.postId}`}>
+          <Link to={`/social-media/comments/${post.postId}`}>
             <FontAwesomeIcon icon={faComment} className=" cursor-pointer" />{" "}
             comments
           </Link>

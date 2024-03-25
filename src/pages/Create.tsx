@@ -83,7 +83,7 @@ export default function Create() {
     <form onSubmit={handleSubmit(submitPost)} className="p-12">
       {/* create post Header */}
       <div className=" flex justify-between">
-        <Link to="/">
+        <Link to="/social-media">
           <FontAwesomeIcon icon={faArrowLeft} />
         </Link>
         <p>Create Post</p>

@@ -33,13 +33,13 @@ export default function NavBar() {
             </span>
           </div>
           <div className="flex items-center md:text-xl text-lg">
-            <Link to="/" className="hidden md:block mx-5">
+            <Link to="/social-media" className="hidden md:block mx-5">
               Home
             </Link>
 
             {/* Navbar content depening on if user is logged in or not */}
             {!userInfos ? (
-              <Link to="/login">Login</Link>
+              <Link to="/social-media/login">Login</Link>
             ) : (
               <div className="flex items-center">
                 <Link to="/create" className="md:px-3">

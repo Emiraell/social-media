@@ -113,7 +113,7 @@ export default function posts({ post }: Ipost) {
           <p
             className={`${
               userLiked && "text-blue-500"
-            } text-2xl tracking-widest`}
+            } text-xl tracking-widest`}
           >
             <FontAwesomeIcon icon={faThumbsUp} className={` px-2 `} /> like
           </p>

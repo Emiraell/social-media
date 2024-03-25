@@ -23,7 +23,9 @@ export default function Comments() {
   const { id } = useParams();
 
   // all post to get the post the user is commenting on
-  const allPosts = useAppSelector((state) => state.postsReducer.allPosts);
+  const allPosts = useAppSelector(
+    (state) => state.persistedReducer.postsReducer.allPosts
+  );
   const [post, setPost] = useState<postState | null>(null);
   const [comments, setComments] = useState<comment[]>();
 
@@ -35,10 +37,7 @@ export default function Comments() {
   // get all comments for this post
   const getcomment = async () => {
     const commentRef = collection(db, "comments");
-    const commentToQuery = query(
-      commentRef,
-      where("postId", "==", post?.postId)
-    );
+    const commentToQuery = query(commentRef, where("postId", "==", id));
     // await the data
     const data = await getDocs(commentToQuery);
     setComments(

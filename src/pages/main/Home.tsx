@@ -12,7 +12,9 @@ export default function Home() {
 
   // dispatch our actions and get posts from redux store
   const dispatch = useAppDispatch();
-  const allPost = useAppSelector((state) => state.postsReducer.allPosts);
+  const allPost = useAppSelector(
+    (state) => state.persistedReducer.postsReducer.allPosts
+  );
 
   useEffect(() => {
     dispatch(getAllPost());

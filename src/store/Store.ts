@@ -6,6 +6,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { postSlice } from "./features/Posts";
 import { likeSlice } from "./features/Likes";
 
+// using redux-persist to prevent data loss on page refresh
 const persistConfig = {
   key: "root",
   version: 1,

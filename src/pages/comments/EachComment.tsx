@@ -57,11 +57,14 @@ export default function EachComment({ com, setComments }: IProps) {
               <p className="text-start py-2  ">{com.comment}</p>
             </div>
           </div>
-          <FontAwesomeIcon
-            icon={faTrash}
-            className=" text-red-500"
-            onClick={deleteComment}
-          />
+          {/* delete functionality to only users who made the comment */}
+          {com.user === userInfos?.uid && (
+            <FontAwesomeIcon
+              icon={faTrash}
+              className=" text-red-500"
+              onClick={deleteComment}
+            />
+          )}
         </div>
       }
     </div>

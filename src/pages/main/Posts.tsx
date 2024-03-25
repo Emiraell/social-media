@@ -62,29 +62,30 @@ export default function posts({ post }: Ipost) {
             </p>
           </div>
         </div>
-        <div className=" relative">
-          <FontAwesomeIcon
-            icon={faEllipsis}
-            className="text-xl"
-            onClick={() => setOpenEllipsis(!openEllipsis)}
-          />
-          {openEllipsis && (
-            <p
-              className=" absolute -left-8 "
-              onClick={() => {
-                const deleteParams: deleteProps = {
-                  postId: post.postId,
-                  datePosted: post.datePosted,
-                  userId: userInfos?.uid,
-                  content: post.content,
-                };
-                dispatch(deletePost(deleteParams));
-              }}
-            >
-              Delete
-            </p>
-          )}
-        </div>
+
+        {/* delete functionality to only users who made the ppost */}
+        {userInfos?.uid === post.userId && (
+          <div className=" relative">
+            <FontAwesomeIcon
+              icon={faEllipsis}
+              className="text-xl cursor-pointer"
+              onClick={() => setOpenEllipsis(!openEllipsis)}
+            />
+            {openEllipsis && (
+              <p
+                className=" absolute -left-8 cursor-pointer w-fit text-red-500 bg-gray-200 p-1 rounded-md hover:text-gray-100 hover:bg-red-500 "
+                onClick={() => {
+                  const deleteParams: deleteProps = {
+                    postId: post.postId,
+                  };
+                  dispatch(deletePost(deleteParams));
+                }}
+              >
+                Delete
+              </p>
+            )}
+          </div>
+        )}
       </div>
       <div className="text-start px-4 py-5 pl-6 text-lg md:text-2xl tracking-wider">
         {post.content}
@@ -110,17 +111,18 @@ export default function posts({ post }: Ipost) {
               : dispatch(deleteLike(deleteLikeParams));
           }}
         >
-          <p
+          <span
             className={`${
               userLiked && "text-blue-500"
-            } text-xl tracking-widest`}
+            } text-xl tracking-widest cursor-pointer`}
           >
-            <FontAwesomeIcon icon={faThumbsUp} className={` px-2 `} /> like
-          </p>
+            <FontAwesomeIcon icon={faThumbsUp} className={` px-2`} /> like
+          </span>
         </p>
         <p>
           <Link to={`/comments/${post.postId}`}>
-            <FontAwesomeIcon icon={faComment} /> comments
+            <FontAwesomeIcon icon={faComment} className=" cursor-pointer" />{" "}
+            comments
           </Link>
         </p>
       </div>

@@ -64,12 +64,13 @@ export default function Comments() {
           <div className="text-start text-lg md:text-xl px-4 md:tracking-widest tracking-wide">
             <p className="font-bold  text-emerald-500">{post?.userName}</p>
             {/* post */}
-            <p className=" leading-6 py-2 md:text-2xl">{post?.content}</p>
+            <p className=" leading-6 py-2 md:text-2xl pr-4">{post?.content}</p>
           </div>
         </div>
         {/* post date and time */}
-        <p className="text-gray-400 py-2 border-y mt-3">
+        <p className="text-gray-400 py-2 border-y mt-3 flex justify-around ">
           <span>
+            <FontAwesomeIcon icon={faClock} className="px-1 pl-1" />
             {post?.datePosted.time.hour}:
             {post && post?.datePosted.time.minute < 10 ? (
               <>0{post.datePosted.time.minute}</>
@@ -77,9 +78,11 @@ export default function Comments() {
               <>0{post?.datePosted.time.minute}</>
             )}
           </span>
-          <FontAwesomeIcon icon={faClock} className="pr-3 pl-1" />
-          {post?.datePosted?.date} {post?.datePosted?.month},{" "}
-          {post?.datePosted?.year}
+
+          <span>
+            {post?.datePosted?.date} {post?.datePosted?.month},{" "}
+            {post?.datePosted?.year}
+          </span>
         </p>
 
         <p className="my-8 text-2xl tracking-wide font-mono text-start px-10 text-gray-300">
@@ -87,7 +90,7 @@ export default function Comments() {
         </p>
 
         {/* display content based on if comment is available */}
-        {!comments ? (
+        {comments?.length === 0 ? (
           <p className="pt-10 text-3xl text-gray-700 leading-10">
             No comments found <br /> Add comment{" "}
           </p>

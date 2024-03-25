@@ -21,12 +21,12 @@ export default function NavBar() {
       {/* navBar */}
       <nav className="fixed w-full p-3 md:p-5 bg-blue-950 z-10">
         <div className="flex justify-between overflow-hidden items-center mx-5">
-          <div>
+          <div className=" cursor-pointer">
             <img
               src={logo}
               alt=""
               className="h-12 rounded-full inline"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/social-media")}
             />{" "}
             <span className=" text-sm md:text-lg italic text-blue-300">
               Emirael
@@ -42,7 +42,7 @@ export default function NavBar() {
               <Link to="/social-media/login">Login</Link>
             ) : (
               <div className="flex items-center">
-                <Link to="/create" className="md:px-3">
+                <Link to="/social-media/create" className="md:px-3">
                   create
                 </Link>
                 <div className="flex items-center">

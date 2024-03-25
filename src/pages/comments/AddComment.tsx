@@ -74,7 +74,7 @@ export default function AddComment({ post, setComments }: IProps) {
     <div>
       <form
         onSubmit={handleSubmit(addComment)}
-        className=" fixed bottom-0 left-0 right-0 flex items-center justify-center bg-gray-900"
+        className=" fixed bottom-10 left-0 right-0 flex items-center justify-center bg-gray-900"
       >
         <div className="relative">
           <textarea

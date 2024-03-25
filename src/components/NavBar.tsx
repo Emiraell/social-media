@@ -21,12 +21,17 @@ export default function NavBar() {
       {/* navBar */}
       <nav className="fixed w-full p-3 md:p-5 bg-blue-950 z-10">
         <div className="flex justify-between overflow-hidden items-center mx-5">
-          <img
-            src={logo}
-            alt=""
-            className="h-12 rounded-full"
-            onClick={() => navigate("/")}
-          />
+          <div>
+            <img
+              src={logo}
+              alt=""
+              className="h-12 rounded-full inline"
+              onClick={() => navigate("/")}
+            />{" "}
+            <span className=" text-sm md:text-lg italic text-blue-300">
+              Emirael
+            </span>
+          </div>
           <div className="flex items-center md:text-xl text-lg">
             <Link to="/" className="hidden md:block mx-5">
               Home
@@ -41,18 +46,18 @@ export default function NavBar() {
                   create
                 </Link>
                 <div className="flex items-center">
-                  <span className="hidden md:block md:px-3">
-                    {userInfos.displayName}
-                  </span>
                   <img
                     src={`${userInfos.photoURL}`}
                     alt=""
                     className="h-9 rounded-full mx-3"
                   />
+                  <span className="hidden md:block">
+                    {userInfos.displayName}
+                  </span>
                 </div>
                 <button
                   onClick={signUserOut}
-                  className=" bg-red-400 py-1 px-2 rounded ml-3 hover:opacity-85"
+                  className=" bg-red-400 cursor-pointer py-1 px-2 rounded ml-3 hover:opacity-85"
                 >
                   Sign out
                 </button>

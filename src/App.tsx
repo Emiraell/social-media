@@ -12,10 +12,10 @@ function App() {
       <Router>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<LoginUser />} />
-          <Route path="/create" element={<Create />} />
-          <Route path="/comments/:id" element={<Comments />} />
+          <Route path="/social-media" element={<Home />} />
+          <Route path="/social-media/login" element={<LoginUser />} />
+          <Route path="/social-media/create" element={<Create />} />
+          <Route path="/social-media/comments/:id" element={<Comments />} />
         </Routes>
       </Router>
     </div>

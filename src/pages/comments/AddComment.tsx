@@ -8,10 +8,11 @@ import { auth, db } from "../../configurations/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { postState } from "../../store/features/Posts";
 import { comment } from "./Comments";
+import { Dispatch, SetStateAction } from "react";
 
 interface IProps {
   post: postState | null;
-  setComments: any;
+  setComments: Dispatch<SetStateAction<any>>;
 }
 
 export default function AddComment({ post, setComments }: IProps) {

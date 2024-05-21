@@ -11,10 +11,11 @@ import {
 import { auth, db } from "../../configurations/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { comment } from "./Comments";
+import { Dispatch, SetStateAction } from "react";
 
 interface IProps {
   com: comment;
-  setComments: any;
+  setComments: Dispatch<SetStateAction<any>>;
 }
 
 export default function EachComment({ com, setComments }: IProps) {

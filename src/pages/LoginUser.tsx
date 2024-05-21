@@ -9,7 +9,7 @@ export default function LoginUser() {
   // sign in user with google provider
   const signUserIn = async () => {
     await signInWithPopup(auth, provider);
-    navigate("/");
+    navigate("/social-media");
   };
   return (
     <div>

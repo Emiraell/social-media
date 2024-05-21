@@ -72,10 +72,10 @@ export default function Comments() {
           <span>
             <FontAwesomeIcon icon={faClock} className="px-1 pl-1" />
             {post?.datePosted.time.hour}:
-            {post && post?.datePosted.time.minute < 10 ? (
-              <>0{post.datePosted.time.minute}</>
+            {post && post?.datePosted?.time.minute < 10 ? (
+              <>0{post.datePosted.time?.minute}</>
             ) : (
-              <>0{post?.datePosted.time.minute}</>
+              <>0{post?.datePosted.time?.minute}</>
             )}
           </span>
 

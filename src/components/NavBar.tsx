@@ -13,7 +13,7 @@ export default function NavBar() {
   // signOut
   const signUserOut = async () => {
     await signOut(auth);
-    navigate("/login");
+    navigate("/social-media/login");
   };
 
   return (

@@ -8,6 +8,7 @@ import { db } from "../../configurations/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import EachComment from "../comments/EachComment";
 import AddComment from "./AddComment";
+import { format } from "date-fns";
 
 export interface comment {
   user: string;
@@ -50,48 +51,42 @@ export default function Comments() {
   }, []);
 
   return (
-    <div className=" m-auto md:w-[70%] lg:w-[60%] md:bg-blue-950 md: h-[100vh] md:mt-16 mt-8">
+    <div className=" mx-auto md:w-[70%] lg:w-[60%] md:bg-blue-950 md: h-[100vh] pt-8">
       <>
-        <div className="fixed flex w-full  p-5 items-center">
+        <div className=" flex w-full px-5 pb-3 items-center">
           <Link to="/social-media">
-            <FontAwesomeIcon icon={faArrowLeft} className="h-10 mr-6" />
+            <FontAwesomeIcon icon={faArrowLeft} className="h-8" />
           </Link>
-          <p className="font-bold m-auto text-2xl md:pr-20 md:text-3xl">Post</p>
+          <p className="font-bold m-auto text-xl">Post</p>
         </div>
-        <div className="pt-24 mx-5 flex">
-          <img src={post?.userPhoto} alt="" className="h-14 rounded-full" />
+        <div className="md:pt-8 mx-5 flex">
+          <img src={post?.userPhoto} alt="" className="h-12 rounded-full" />
 
-          <div className="text-start text-lg md:text-xl px-4 md:tracking-widest tracking-wide">
-            <p className="font-bold  text-emerald-500">{post?.userName}</p>
+          <div className="text-start px-4 md:tracking-wide">
+            <p className="font-bold text-emerald-500">{post?.userName}</p>
+
             {/* post */}
-            <p className=" leading-6 py-2 md:text-2xl pr-4">{post?.content}</p>
+            <p className=" py-2 pr-4">{post?.content}</p>
           </div>
         </div>
+
         {/* post date and time */}
-        <p className="text-gray-400 py-2 border-y mt-3 flex justify-around ">
+        <p className="text-gray-400 py-2 border-y mt-3 flex justify-around text-sm">
           <span>
             <FontAwesomeIcon icon={faClock} className="px-1 pl-1" />
-            {post?.datePosted.time.hour}:
-            {post && post?.datePosted?.time.minute < 10 ? (
-              <>0{post.datePosted.time?.minute}</>
-            ) : (
-              <>0{post?.datePosted.time?.minute}</>
-            )}
+            {post?.datePosted && format(post?.datePosted, "hh:mm aaa")}
           </span>
 
           <span>
-            {post?.datePosted?.date} {post?.datePosted?.month},{" "}
-            {post?.datePosted?.year}
+            {post?.datePosted && format(post?.datePosted, "MMM dd, yyyy")}
           </span>
         </p>
 
-        <p className="my-8 text-2xl tracking-wide font-mono text-start px-10 text-gray-300">
-          comments
-        </p>
+        <p className="my-8 text-2xl font-mono px-10 text-gray-300">comments</p>
 
         {/* display content based on if comment is available */}
         {comments?.length === 0 ? (
-          <p className="pt-10 text-3xl text-gray-700 leading-10">
+          <p className="pt-10 text-3xl text-gray-600 leading-10">
             No comments found <br /> Add comment{" "}
           </p>
         ) : (

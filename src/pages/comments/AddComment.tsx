@@ -25,11 +25,12 @@ export default function AddComment({ post, setComments }: IProps) {
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
   // add comment to firestore database
-  const addComment = async (data: { comment: string }, e: any) => {
+  const addComment = async (data: { comment: string }) => {
     try {
       const commentsRef = collection(db, "comments");
       const newDoc = await addDoc(commentsRef, {
@@ -65,38 +66,37 @@ export default function AddComment({ post, setComments }: IProps) {
               } as comment,
             ]
       );
-      e.target.reset();
+      reset();
     } catch {
       setComments((prev: comment[]) => [...prev]);
     }
   };
 
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit(addComment)}
-        className=" fixed bottom-10 left-0 right-0 flex items-center justify-center bg-gray-900"
-      >
-        <div className="relative">
-          <textarea
-            {...register("comment")}
-            className=" bg-transparent outline-none px-14 py-3 overflow-x-hidden h-16"
-            placeholder="write a comment"
-            id="comment"
-          />
-          {errors.comment?.message && (
-            <p className="absolute -top-7 right-0 text-red-400">
-              {errors.comment.message}
-            </p>
-          )}
-          <button type="submit">
-            <FontAwesomeIcon
-              icon={faPaperPlane}
-              className="h-8 text-emerald-500 ml-8 mb-4"
-            />
-          </button>
-        </div>
-      </form>
-    </div>
+    <form
+      onSubmit={handleSubmit(addComment)}
+      className=" bg-gray-900 fixed bottom-0 md:w-[70%] lg:w-[60%] flex items-center px-5"
+    >
+      <div className="relative w-[90%] ">
+        <textarea
+          {...register("comment")}
+          className=" bg-transparent outline-none pt-3 w-full "
+          placeholder="write a comment"
+          id="comment"
+        />
+        {/* error message */}
+        {errors.comment?.message && (
+          <p className="absolute -top-7 right-0 text-red-400">
+            {errors.comment.message}
+          </p>
+        )}
+      </div>
+      <button type="submit">
+        <FontAwesomeIcon
+          icon={faPaperPlane}
+          className="h-8 text-emerald-500 w-10"
+        />
+      </button>
+    </form>
   );
 }

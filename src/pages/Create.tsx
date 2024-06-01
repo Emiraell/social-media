@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { addDoc, collection } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { format } from "date-fns";
 
 export default function Create() {
   const navigate = useNavigate();
@@ -19,68 +19,37 @@ export default function Create() {
   const schema = yup.object().shape({
     content: yup.string().max(800).min(1).required(),
   });
-  const { register, handleSubmit } = useForm({ resolver: yupResolver(schema) });
+  const { register, handleSubmit, reset } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   // post collection in our firestore database
   const postRef = collection(db, "posts");
 
-  // get date of making post
-  const [day, setDay] = useState<string>("");
-  const [month, setMonth] = useState<string>("");
-  const getDay = () => {
-    const date: number = new Date().getDay();
-    date === 0 && setDay("Sun");
-    date === 1 && setDay("Mon");
-    date === 2 && setDay("Tue");
-    date === 3 && setDay("Wed");
-    date === 4 && setDay("Thu");
-    date === 5 && setDay("Fri");
-    date === 6 && setDay("Sat");
-
-    const month: number = new Date().getMonth();
-    month === 0 && setMonth("Jan");
-    month === 1 && setMonth("Feb");
-    month === 2 && setMonth("Mar");
-    month === 3 && setMonth("Apr");
-    month === 4 && setMonth("May");
-    month === 5 && setMonth("Jun");
-    month === 6 && setMonth("Jul");
-    month === 7 && setMonth("Aug");
-    month === 8 && setMonth("Sep");
-    month === 9 && setMonth("Oct");
-    month === 10 && setMonth("Nov");
-    month === 11 && setMonth("Dec");
-  };
-
   // add documents to firestore database
-  const submitPost = async (data: { content: string }, e: any) => {
-    const date: Date = new Date();
+  const submitPost = async (data: { content: string }) => {
+    const date: number = new Date().getFullYear();
+    const month: number = new Date().getMonth();
+    const day = new Date().getDate();
+    const hour = new Date().getHours();
+    const minute = new Date().getMinutes();
+    const sec = new Date().getSeconds();
     await addDoc(postRef, {
       userId: userInfos?.uid as string,
       userName: userInfos?.displayName as string,
       userPhoto: userInfos?.photoURL as string,
-      datePosted: {
-        year: date.getFullYear() as number,
-        month: month as string,
-        date: date.getDate() as number,
-        day: day as string,
-        time: {
-          hour: date.getHours() as number,
-          minute: date.getMinutes() as number,
-        },
-      },
+      datePosted: format(
+        new Date(date, month, day, hour, minute, sec),
+        "yyyy-MM-dd, hh:mm aaa"
+      ),
       ...data,
     });
-    e.target.reset();
-    navigate("/");
+    reset();
+    navigate("/social-media");
   };
 
-  useEffect(() => {
-    getDay();
-  }, [day, month]);
-
   return (
-    <form onSubmit={handleSubmit(submitPost)} className="p-12">
+    <form onSubmit={handleSubmit(submitPost)} className="p-12 md:p-20">
       {/* create post Header */}
       <div className=" flex justify-between">
         <Link to="/social-media">
@@ -93,7 +62,7 @@ export default function Create() {
       </div>
 
       {/* user infos*/}
-      <div className="flex items-center my-10 m-auto md:w-[50%]">
+      <div className="flex items-center mt-10 mb-5">
         <img
           src={`${userInfos?.photoURL}`}
           alt=""

@@ -12,6 +12,7 @@ import { auth, db } from "../../configurations/firebase";
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
 
 interface Ipost {
   post: postState;
@@ -54,12 +55,18 @@ export default function posts({ post }: Ipost) {
         <div className="flex">
           <img src={`${post.userPhoto}`} alt="" className="rounded-full h-12" />
 
-          <div className="px-3 text-start">
+          <div className="px-3 text-start w-full">
             <p>{post.userName}</p>
-            <p className="text-gray-400">
-              {post.datePosted?.date} {post.datePosted?.month},{" "}
-              {post.datePosted?.year}
-            </p>
+            <div className="text-gray-400 text-sm flex items-center justify-between">
+              {/* format date using date-fns package */}
+              <p>
+                {post.datePosted && format(post.datePosted, "eee, dd MMM yy ")}
+              </p>
+              <p className="px-2">at</p>
+              <p className="">
+                {post.datePosted && format(post.datePosted, "hh:mm aaa")}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -87,8 +94,8 @@ export default function posts({ post }: Ipost) {
           </div>
         )}
       </div>
-      <div className="text-start px-4 py-5 pl-6 text-lg md:text-2xl tracking-wider">
-        {post.content}
+      <div className="text-start px-4 py-5 pl-6 text-lg md:text-xl tracking-wide">
+        <Link to={`/social-media/comments/${post.postId}`}>{post.content}</Link>
       </div>
       {postLikes && postLikes.length > 0 && (
         <p className="text-start px-10 text-2xl py-2">

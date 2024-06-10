@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { addLikes, deleteLike, likeState } from "../../store/features/Likes";
 import { deletePost, deleteProps, postState } from "../../store/features/Posts";
@@ -44,6 +45,7 @@ export default function posts({ post }: Ipost) {
   useEffect((): (() => void) => {
     getPostLikes();
     return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postLikes]);
 
   // check if current user logged in has liked the post

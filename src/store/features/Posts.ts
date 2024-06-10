@@ -11,7 +11,7 @@ export interface postState {
   userId: string;
   userName: string;
   userPhoto: string;
-  datePosted: string | number | Date | any;
+  datePosted: string | number | Date;
   content: string;
   postId: string;
 }

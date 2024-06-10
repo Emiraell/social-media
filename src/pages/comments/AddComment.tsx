@@ -12,7 +12,7 @@ import { Dispatch, SetStateAction } from "react";
 
 interface IProps {
   post: postState | null;
-  setComments: Dispatch<SetStateAction<any>>;
+  setComments: Dispatch<SetStateAction<comment[] | undefined>>;
 }
 
 export default function AddComment({ post, setComments }: IProps) {
@@ -42,7 +42,7 @@ export default function AddComment({ post, setComments }: IProps) {
       });
 
       // set comment adding to firestore database
-      setComments((prev: comment[]) =>
+      setComments((prev: comment[] | undefined) =>
         prev
           ? [
               ...prev,
@@ -68,7 +68,7 @@ export default function AddComment({ post, setComments }: IProps) {
       );
       reset();
     } catch {
-      setComments((prev: comment[]) => [...prev]);
+      setComments((prev: comment[] | undefined) => prev);
     }
   };
 

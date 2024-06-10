@@ -15,7 +15,7 @@ import { Dispatch, SetStateAction } from "react";
 
 interface IProps {
   com: comment;
-  setComments: Dispatch<SetStateAction<any>>;
+  setComments: Dispatch<SetStateAction<comment[] | undefined>>;
 }
 
 export default function EachComment({ com, setComments }: IProps) {
@@ -38,7 +38,7 @@ export default function EachComment({ com, setComments }: IProps) {
     const commentToDelete = doc(db, "comments", commentId);
     await deleteDoc(commentToDelete);
     setComments(
-      (prev: comment[]) =>
+      (prev: comment[] | undefined) =>
         prev && prev.filter((comment) => comment.commentId !== commentId)
     );
   };

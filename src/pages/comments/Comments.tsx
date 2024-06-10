@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Link, useParams } from "react-router-dom";
 import { useAppSelector } from "../../store/Store";
 import { postState } from "../../store/features/Posts";
@@ -28,7 +29,7 @@ export default function Comments() {
     (state) => state.persistedReducer.postsReducer.allPosts
   );
   const [post, setPost] = useState<postState | null>(null);
-  const [comments, setComments] = useState<comment[]>();
+  const [comments, setComments] = useState<comment[] | undefined>();
 
   useEffect(() => {
     // get the post to comment on once the page is loaded

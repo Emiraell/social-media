@@ -18,7 +18,7 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getAllPost());
-  }, []);
+  });
   return (
     <div className="">
       <NavBar />
